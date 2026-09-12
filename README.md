@@ -5,7 +5,8 @@
 ├─metrics.py        
 ├─model.py         
 ├─train.py          
-└─utils.py 
+├─utils.py 
+└── README.md
 # 数据集信息
 训练集：3000条
 验证集：1000条
