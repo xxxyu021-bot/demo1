@@ -1,0 +1,36 @@
+{
+    "device": "cuda",
+    "model_name": "bert-base-chinese",
+    "dropout_rate": 0.3,
+    "batch_size": 16,
+    "num_epochs": 6,
+    "learning_rate": 1e-5,
+    "num_classes": 15,
+    "max_seq_len": 128,
+    "weight_decay": 0.01,
+    "data": {
+        "train_txt_path": "Remote/data/train.txt",
+        "dev_txt_path": "Remote/data/dev.txt",
+        "test_txt_path": "Remote/data/test.txt"
+    },
+    "label_map": {
+        "100": 0,
+        "101": 1,
+        "102": 2,
+        "103": 3,
+        "104": 4,
+        "106": 5,
+        "107": 6,
+        "108": 7,
+        "109": 8,
+        "110": 9,
+        "112": 10,
+        "113": 11,
+        "114": 12,
+        "115": 13,
+        "116": 14
+    },
+    "swanlab": {
+        "project": "bert-toutiao-demo1"
+    }
+}
