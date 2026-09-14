@@ -3,7 +3,7 @@ import os
 import torch
 
 
-def load_config(config_path="config.json"):
+def load_config(config_path="config/config.json"):
     with open(config_path, "r", encoding="utf-8") as f:
         cfg = json.load(f)
     if cfg["device"] == "cuda":
