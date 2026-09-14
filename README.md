@@ -1,12 +1,9 @@
 # 项目结构  
 ```
 ├── config/
-│   └── config.json       
-├── Remote/                
-├── swanlog/              
+│   └── config.json                    
 ├── config.py             
-├── dataset.py            
-├── main.py                 
+├── dataset.py                           
 ├── metrics.py          
 ├── model.py                
 ├── train.py               
