@@ -52,7 +52,7 @@ def main():
     ).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.AdamW(model.parameters(), lr=cfg["learning_rate"], weight_decay=cfg["weight_decay"])
-    #新增学习率调度器
+    #新增学习率调度器linear warmup + linear decay
     total_steps = len(train_loader) * cfg["num_epochs"]
     warmup_ratio = cfg["warmup_ratio"]
     warmup_steps = int(total_steps * warmup_ratio)
@@ -125,6 +125,7 @@ def main():
             patience_counter = 0
             torch.save(model.state_dict(), best_model_path)
             print(f"Best F1: {best_val_f1:.4f}\n")
+        #新增early stopping
         else:
             patience_counter += 1
             print(f"No improvement. Patience: {patience_counter}/{patience}\n")
