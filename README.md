@@ -1,12 +1,17 @@
 # 项目结构  
-├─config.json       
-├─config.py         
-├─dataset.py               
-├─metrics.py        
-├─model.py         
-├─train.py          
-├─utils.py   
-└─README.md
+```
+├── config/
+│   └── config.json       
+├── Remote/                
+├── swanlog/              
+├── config.py             
+├── dataset.py            
+├── main.py                 
+├── metrics.py          
+├── model.py                
+├── train.py               
+└── utils.py
+
 # 数据集信息
 训练集：3000条
 验证集：1000条
@@ -30,39 +35,40 @@
 | 116 | 新闻游戏 |
 
 # 超参数记录
-| 实验 | 学习率 | Batch Size | Dropout | 最佳验证集 Accuracy | 测试集 Accuracy | recall | f1 |
+| 实验 | 学习率 | Batch Size | Dropout | 最佳f1| 测试集 Accuracy | recall | f1 |
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| 第一组 | 2e-5 | 4 | 0.2 | 80.9% | 80.55% | 76.95% | 77.55% |
-| 第二组 | 2e-5 | 8 | 0.2 | 82.6% | 83.08% | 81.64% | 82.22% |
-| 第三组 | 2e-5 | 8 | 0.3 | 82.9% | 80.92% | 77.83% | 79.63% |
-| 第四组 | 1e-5 | 8 | 0.3 | 82.8% | 83.27% | 80.54% | 81.74% |
-| 第五组 | 1e-5 | 16 | 0.3 | 82.7% | 83.46% | 81.33% | 81.95% |
+| 第一组 | 2e-5 | 4 | 0.2 | 82.35% | 81.86% | 80.84% | 81.41% |
+| 第二组 | 2e-5 | 8 | 0.2 | 82.48% | 84.02% | 82.26% | 82.98% |
+| 第三组 | 2e-5 | 8 | 0.3 | 82.02% | 84.02% | 82.34% | 83.35% |
+| 第四组 | 1e-5 | 8 | 0.3 | 81.34% | 83.55% | 80.97% | 82.04% |
+| 第五组 | 1e-5 | 16 | 0.3 | 79.91% | 83.46% | 80.04% | 81.43% |
 # 实验结果说明
-1.第一组在第3epoch后验证准确度开始下降，损失提高，出现明显的过拟合，最终测试准确度较低，第二组将batch调高后准确度提升，但过拟合依然比较明显
-第一组：
-<img width="2013" height="1074" alt="image" src="https://github.com/user-attachments/assets/9e6600f6-3539-4b8b-bcc1-56671274de39" />
-第二组：
-<img width="2043" height="1005" alt="image" src="https://github.com/user-attachments/assets/f78a1646-b6f6-4db9-ac7c-4d1415e137b8" />
-2.根据前面的结果先选择batchsize为8降低震荡，提高dropout减缓过拟合，第三组过拟合现象有减缓，但准确度下降，recall和f1也比第二组更低
-<img width="2055" height="1020" alt="image" src="https://github.com/user-attachments/assets/63df3f76-9018-4313-aff3-e5c41a0cb0bd" />
-3.第四组尝试调整学习率，结果准确度提升，说明降低学习率提高训练稳定性在正则化提高后提高了准确度
-<img width="2067" height="1014" alt="image" src="https://github.com/user-attachments/assets/a14a968c-a74b-4041-85e3-661fec7e59c2" />
-4.第五组提高batchsize后准确度依然达到83%，在较低学习率下适当提高batch大小让训练更平稳可以提高模型泛化能力
-<img width="2019" height="1041" alt="image" src="https://github.com/user-attachments/assets/f321becc-a755-414e-8040-46a4066ad228" />
+新增 linear warmup和linear decay后有效缓解过拟合，acc，recall和f1相比无线性预热和衰减时都有提升，第三组的对比情况如下图所示：
+新增 linear warmup和linear decay后
+<img width="2028" height="1002" alt="image" src="https://github.com/user-attachments/assets/514e959b-4b2d-4df9-b243-ff865c4ec4eb" />
+新增 linear warmup和linear decay前
+<img width="2037" height="1020" alt="image" src="https://github.com/user-attachments/assets/3bb8b743-8f6e-45cd-b9fe-72d74f12ffed" />
+acc，recall，f1验证结果整体在新增 linear warmup和linear decay后有所提高，峰值也更高
+
 # 实验结果
-新增recall和f1可视化
-<img width="762" height="594" alt="image" src="https://github.com/user-attachments/assets/6cca7e28-cbbe-49d1-a4ea-8c71a910fc57" />
-<img width="2004" height="1013" alt="image" src="https://github.com/user-attachments/assets/cdb3468d-c209-4fee-a607-57b83bfa1fb1" />
-<img width="2037" height="1029" alt="image" src="https://github.com/user-attachments/assets/f075fcf6-6a2b-4847-b50d-723eeeafbbb6" />
+最佳情况下测试结果acc为84.02%达到83%的预计结果，同时recall为82.34%，f1为83.35%。
+<img width="1035" height="594" alt="image" src="https://github.com/user-attachments/assets/b9f2a7a0-59c2-44f6-ad2b-015b7af1c7d8" />
+<img width="2013" height="1020" alt="image" src="https://github.com/user-attachments/assets/b1fb7bf5-8b1e-4892-bd79-be0ec145da22" />
+<img width="2028" height="1023" alt="image" src="https://github.com/user-attachments/assets/d5d13d2f-f127-4973-b10e-ce66067007c4" />
+
+
     "dropout_rate": 0.3,
-    "batch_size": 16,
+    "batch_size": 8,
     "num_epochs": 6,
-    "learning_rate": 1e-5,
+    "learning_rate": 2e-5,
     "num_classes": 15,
     "max_seq_len": 128,
     "weight_decay": 0.01
+    "seed": 42,
+    "warmup_ratio": 0.1,
+    "early_stopping_patience": 3
 # 实验总结
- Batch Size较低可以提高更新次数但过低会导致稳定性降低，需要适当提升Batch Size提高稳定性，提高dropout可以减缓过拟合现象，但也有可能因为正则化提升导致泛化能力下降，学习率也会影响训练稳定性，过高会导致梯度较大过低可能导致收敛不充分，需要根据验证结果调整学习率和batch大小来提高泛化能力。
+ Batch Size较低可以提高更新次数但过低会导致稳定性降低，需要适当提升Batch Size提高稳定性，提高dropout可以减缓过拟合现象，但也有可能因为正则化提升导致泛化能力下降，学习率也会影响训练稳定性，过高会导致梯度较大过低可能导致收敛不充分，需要根据验证结果调整学习率和batch大小来提高泛化能力。添加随机种子后确保实验结果可以复现，有利于对照不同参数的结果，线性预热有利于训练过程中梯度稳定，预热完后开始衰减，减少震荡有利于让收敛效果更好。
 
 
 
