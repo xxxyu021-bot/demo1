@@ -1,7 +1,8 @@
 # 项目结构  
 ```
 ├── config/
-│   └── config.json                    
+│   └── config.json
+├── README.md                 
 ├── config.py             
 ├── dataset.py                           
 ├── metrics.py          
