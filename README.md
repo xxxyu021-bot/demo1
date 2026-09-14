@@ -11,7 +11,7 @@
 ├── model.py                
 ├── train.py               
 └── utils.py
-
+```
 # 数据集信息
 训练集：3000条
 验证集：1000条
@@ -45,7 +45,8 @@
 # 实验结果说明
 新增 linear warmup和linear decay后有效缓解过拟合，acc，recall和f1相比无线性预热和衰减时都有提升，第三组的对比情况如下图所示：
 新增 linear warmup和linear decay后
-<img width="2028" height="1002" alt="image" src="https://github.com/user-attachments/assets/514e959b-4b2d-4df9-b243-ff865c4ec4eb" />
+<img width="2034" height="1007" alt="image" src="https://github.com/user-attachments/assets/6ab02f82-e087-424b-9f3c-abaef7d25cb4" />
+
 新增 linear warmup和linear decay前
 <img width="2037" height="1020" alt="image" src="https://github.com/user-attachments/assets/3bb8b743-8f6e-45cd-b9fe-72d74f12ffed" />
 acc，recall，f1验证结果整体在新增 linear warmup和linear decay后有所提高，峰值也更高
