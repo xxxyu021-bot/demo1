@@ -2,18 +2,18 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 import swanlab
-
 from config import load_config
 from dataset import ToutiaoDataset, collate_fn
 from model import MineModel
 from metrics import evaluate
-from utils import print_config
 import os
+from utils import print_config, set_seed
 
 def main():
-    cfg = load_config("config.json")
+    cfg = load_config("config/config.json")
+    set_seed(cfg["seed"])
     print_config(cfg)
     device = cfg["device"]
     tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"])
@@ -52,9 +52,21 @@ def main():
     ).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.AdamW(model.parameters(), lr=cfg["learning_rate"], weight_decay=cfg["weight_decay"])
-
+    #新增学习率调度器
+    total_steps = len(train_loader) * cfg["num_epochs"]
+    warmup_ratio = cfg["warmup_ratio"]
+    warmup_steps = int(total_steps * warmup_ratio)
+    scheduler = get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=warmup_steps,
+        num_training_steps=total_steps
+    )
     #修改流程，训练完成后选取最好的dev model进行test
-    best_val_acc = 0.0
+    # best_val_acc = 0.0
+    #改为以最佳f1为标准
+    best_val_f1 = 0.0
+    patience = cfg["early_stopping_patience"]
+    patience_counter = 0
     best_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Remote", "model", "best_model.pth")
     os.makedirs(os.path.dirname(best_model_path), exist_ok=True)
 
@@ -78,6 +90,7 @@ def main():
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            scheduler.step()
 
             train_loss_sum += loss.item()
 
@@ -101,10 +114,23 @@ def main():
         })
 
         #保存最优结果
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
+
+        #改为以最佳f1为标准
+        # if val_f1 > best_val_f1:
+        #     best_val_f1 = val_f1
+        #     torch.save(model.state_dict(), best_model_path)
+        #     print(f"Best F1: {best_val_f1:.4f}\n")
+        if val_f1 > best_val_f1:
+            best_val_f1 = val_f1
+            patience_counter = 0
             torch.save(model.state_dict(), best_model_path)
-            print(f"Best Acc: {best_val_acc:.4f}\n")
+            print(f"Best F1: {best_val_f1:.4f}\n")
+        else:
+            patience_counter += 1
+            print(f"No improvement. Patience: {patience_counter}/{patience}\n")
+            if patience_counter >= patience:
+                print(f"Early stopping triggered after {epoch + 1} epochs.")
+                break
     # 测试集评估
     model.load_state_dict(torch.load(best_model_path, map_location=device))
     print("Run test set evaluation ...")
