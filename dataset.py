@@ -44,3 +44,23 @@ def collate_fn(batch, tokenizer, max_seq_len):
     )
     encode["labels"] = torch.tensor(labels, dtype=torch.long)
     return encode
+def build_label_map(txt_path):
+    raw_labels = set()
+
+    with open(txt_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            parts = line.split("_!_")
+            raw_label = int(parts[1])
+
+            raw_labels.add(raw_label)
+    raw_labels = sorted(raw_labels)
+    label_map = {
+        raw_label: idx
+        for idx, raw_label in enumerate(raw_labels)
+    }
+    return label_map
