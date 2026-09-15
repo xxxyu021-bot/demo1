@@ -1,11 +1,12 @@
 import torch
 import torch.nn as nn
-from transformers import BertModel
+#方便兼容其他模型
+from transformers import AutoModel
 
 class MineModel(nn.Module):
     def __init__(self, model_name, dropout_rate, num_classes):
         super().__init__()
-        self.bert = BertModel.from_pretrained(model_name)
+        self.bert = AutoModel.from_pretrained(model_name)
         self.dropout = nn.Dropout(dropout_rate)
         self.classifier = nn.Linear(self.bert.config.hidden_size, num_classes)
 
