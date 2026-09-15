@@ -13,5 +13,5 @@ def load_config(config_path="config/config.json"):
     cfg["data"]["train_txt_path"] = os.path.join(root_dir, cfg["data"]["train_txt_path"])
     cfg["data"]["dev_txt_path"] = os.path.join(root_dir, cfg["data"]["dev_txt_path"])
     cfg["data"]["test_txt_path"] = os.path.join(root_dir, cfg["data"]["test_txt_path"])
-    cfg["label_map"] = {int(k): v for k, v in cfg["label_map"].items()}
+
     return cfg
